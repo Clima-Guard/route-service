@@ -2,13 +2,28 @@
 
 public class Startup
 {
-    public Startup(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
 
     public IConfiguration Configuration { get; }
 
+    public Startup(IWebHostEnvironment env)
+    {
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(env.ContentRootPath)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+    
+        // Load User Secrets only in Development
+        if (env.IsDevelopment())
+        {
+            builder.AddUserSecrets<Startup>();
+        }
+    
+        // Load Environment Variables (useful for AWS)
+        builder.AddEnvironmentVariables();
+    
+        Configuration = builder.Build();
+    }
+    
     // This method gets called by the runtime. Use this method to add services to the container
     public void ConfigureServices(IServiceCollection services)
     {

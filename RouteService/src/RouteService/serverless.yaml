@@ -10,6 +10,9 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: RouteService::RouteService.LambdaEntryPoint::FunctionHandlerAsync
+      Environment:
+        Variables:
+          ASPNETCORE_ENVIRONMENT: Production
       Runtime: dotnet8
       CodeUri: ''
       MemorySize: 512
