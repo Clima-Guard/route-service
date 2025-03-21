@@ -1,12 +1,10 @@
-﻿namespace RouteService.Services;
+﻿using Google.Protobuf.Collections;
+using RouteService.DTOs;
+using Route = Google.Maps.Routing.V2.Route;
+
+namespace RouteService.Services;
 
 public interface IGoogleMapsService
 {
-    IList<IDictionary<string, object>> GetRouteDetails(
-        string? originAddress,
-        double? originLongitude,
-        double? originLatitude,
-        string? destinationAddress,
-        double? destinationLongitude,
-        double? destinationLatitude);
+    IList<RouteResponse> GetRouteDetails(RouteRequest request);
 }
