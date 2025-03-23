@@ -1,8 +1,7 @@
-﻿using Google.Protobuf.Collections;
+﻿using System.Collections;
 using Microsoft.AspNetCore.Mvc;
 using RouteService.DTOs;
 using RouteService.Services;
-using Route = Google.Maps.Routing.V2.Route;
 
 namespace RouteService.Controllers;
 
@@ -16,9 +15,15 @@ public class RoutesController : ControllerBase
         _googleMapsService = googleMapsService;
     }
     
-    [HttpGet]
-    public IList<RouteResponse> Get(RouteRequest request)
+    [HttpPost]
+    public ActionResult<IList<RouteResponse>> Get([FromBody] RouteRequest request)
     {
-        return _googleMapsService.GetRouteDetails(request);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        IList<RouteResponse> routes = _googleMapsService.GetRouteDetails(request);
+        return Ok(routes);
     }
 }

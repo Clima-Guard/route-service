@@ -1,9 +1,17 @@
-﻿namespace RouteService.DTOs;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+
+namespace RouteService.DTOs;
 
 public class RouteRequest
 {
+    [Required]
+    [FromBody]
     public WaypointDto Origin { get; set; }
+    [Required]
+    [FromBody]
     public WaypointDto Destination { get; set; }
+    [FromBody]
     public List<WaypointDto>? IntermediateWaypoints { get; set; }
     
     public RouteRequest() 

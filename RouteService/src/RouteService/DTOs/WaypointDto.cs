@@ -1,4 +1,4 @@
-﻿using PolylinerNet;
+﻿using Microsoft.AspNetCore.Mvc;
 using RouteService.Validators;
 
 namespace RouteService.DTOs;
@@ -6,16 +6,21 @@ namespace RouteService.DTOs;
 [WaypointValidator]
 public class WaypointDto
 {
-    public PolylinePoint? Coordinates { get; set; }
+    [FromBody]
+    public double? Latitude { get; set; }
+    [FromBody]
+    public double? Longitude { get; set; }
+    [FromBody]
     public string? Address { get; set; }
 
     public WaypointDto()
     {
     }
 
-    public WaypointDto(PolylinePoint? coordinates, string? address)
+    public WaypointDto(double? latitude, double? longitude, string? address)
     {
-        Coordinates = coordinates;
+        Latitude = latitude;
+        Longitude = longitude;
         Address = address;
     }
 }

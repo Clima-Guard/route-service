@@ -15,7 +15,7 @@ public class WaypointFactory: IWaypointFactory
                 Address = waypointDto.Address
             };
         }
-        if (waypointDto.Coordinates.HasValue)
+        if (waypointDto.Latitude.HasValue && waypointDto.Longitude.HasValue)
         {
             return new Waypoint
             {
@@ -23,8 +23,8 @@ public class WaypointFactory: IWaypointFactory
                 { 
                     LatLng = new LatLng 
                     { 
-                        Latitude = waypointDto.Coordinates.Value.Latitude, 
-                        Longitude = waypointDto.Coordinates.Value.Longitude
+                        Latitude = waypointDto.Latitude.Value, 
+                        Longitude = waypointDto.Longitude.Value
                     } 
                 }
             };
