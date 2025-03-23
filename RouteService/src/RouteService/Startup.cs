@@ -1,4 +1,5 @@
 ﻿using RouteService.Services;
+using RouteService.Utils;
 
 namespace RouteService;
 
@@ -32,7 +33,10 @@ public class Startup
         services.AddControllers();
         
         services.AddSingleton(Configuration);
-
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
+        services.AddScoped<IRouteMapper, RouteMapper>();
+        services.AddScoped<IWaypointFactory, WaypointFactory>();
         services.AddScoped<IGoogleMapsService, GoogleMapsService>();
         
         services.AddEndpointsApiExplorer();
@@ -55,6 +59,8 @@ public class Startup
         app.UseRouting();
 
         app.UseAuthorization();
+        
+        app.UseExceptionHandler();
 
         app.UseEndpoints(endpoints =>
         {

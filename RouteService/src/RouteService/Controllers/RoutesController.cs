@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RouteService.DTOs;
 using RouteService.Services;
 
 namespace RouteService.Controllers;
@@ -14,14 +15,14 @@ public class RoutesController : ControllerBase
     }
     
     [HttpGet]
-    public IList<IDictionary<string, object>> Get(
-        string? originAddress,
-        double? originLongitude,
-        double? originLatitude,
-        string? destinationAddress,
-        double? destinationLongitude,
-        double? destinationLatitude)
+    public ActionResult<IList<RouteResponse>> Get([FromQuery] RouteRequest request)
     {
-        return _googleMapsService.GetRouteDetails(originAddress, originLongitude, originLatitude, destinationAddress, destinationLongitude, destinationLatitude);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        IList<RouteResponse> routes = _googleMapsService.GetRouteDetails(request);
+        return Ok(routes);
     }
 }
