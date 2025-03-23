@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace RouteService.Utils;
+namespace RouteService.Exceptions;
 
 public class GlobalExceptionHandler: IExceptionHandler
 {
