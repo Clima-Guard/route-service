@@ -4,7 +4,7 @@ using Google.Type;
 using PolylinerNet;
 using RouteService.DTOs;
 
-namespace RouteService.Utils;
+namespace RouteService.Services.Factories;
 
 public class WaypointFactory: IWaypointFactory
 {

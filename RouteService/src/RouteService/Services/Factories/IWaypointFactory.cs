@@ -1,7 +1,7 @@
 ﻿using Google.Maps.Routing.V2;
 using RouteService.DTOs;
 
-namespace RouteService.Utils;
+namespace RouteService.Services.Factories;
 
 public interface IWaypointFactory
 {
