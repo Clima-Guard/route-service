@@ -6,4 +6,5 @@ namespace RouteService.Utils;
 public interface IWaypointFactory
 {
     Waypoint Create(WaypointDto waypointDto);
+    WaypointDto Parse(string waypointAsString); 
 }

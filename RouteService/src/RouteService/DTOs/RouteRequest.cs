@@ -1,35 +1,37 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using RouteService.Validators;
 
 namespace RouteService.DTOs;
 
 public class RouteRequest
 {
     [Required]
-    [FromBody]
-    public WaypointDto Origin { get; set; }
+    [FromQuery(Name = "origin")]
+    public string Origin { get; set; }
     [Required]
-    [FromBody]
-    public WaypointDto Destination { get; set; }
-    [FromBody]
-    public List<WaypointDto>? IntermediateWaypoints { get; set; }
+    [FromQuery(Name = "destination")]
+    public string Destination { get; set; }
+    [FromQuery(Name = "waypoints")]
+    [NotEmptyIfProvided]
+    public List<string>? IntermediateWaypoints { get; set; }
     
     public RouteRequest() 
     {
-        IntermediateWaypoints = new List<WaypointDto>();
+        IntermediateWaypoints = new List<string>();
     }
 
-    public RouteRequest(WaypointDto origin, WaypointDto destination, List<WaypointDto>? intermediateWaypoints)
+    public RouteRequest(string origin, string destination, List<string>? intermediateWaypoints)
     {
         Origin = origin;
         Destination = destination;
         IntermediateWaypoints = intermediateWaypoints;
     }
     
-    public RouteRequest(WaypointDto origin, WaypointDto destination)
+    public RouteRequest(string origin, string destination)
     {
         Origin = origin;
         Destination = destination;
-        IntermediateWaypoints = new List<WaypointDto>();
+        IntermediateWaypoints = new List<string>();
     }
 }

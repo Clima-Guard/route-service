@@ -1,11 +1,15 @@
-﻿using Google.Maps.Routing.V2;
+﻿using System.Text.RegularExpressions;
+using Google.Maps.Routing.V2;
 using Google.Type;
+using PolylinerNet;
 using RouteService.DTOs;
 
 namespace RouteService.Utils;
 
 public class WaypointFactory: IWaypointFactory
 {
+    private static readonly Regex CoordinateRegex = new Regex(@"^[-+]?\d*\.?\d+,\s*[-+]?\d*\.?\d+$", RegexOptions.Compiled);
+    
     public Waypoint Create(WaypointDto waypointDto)
     {
         if (waypointDto.Address != null)
@@ -15,7 +19,7 @@ public class WaypointFactory: IWaypointFactory
                 Address = waypointDto.Address
             };
         }
-        if (waypointDto.Latitude.HasValue && waypointDto.Longitude.HasValue)
+        if (waypointDto.Coordinates.HasValue)
         {
             return new Waypoint
             {
@@ -23,12 +27,32 @@ public class WaypointFactory: IWaypointFactory
                 { 
                     LatLng = new LatLng 
                     { 
-                        Latitude = waypointDto.Latitude.Value, 
-                        Longitude = waypointDto.Longitude.Value
+                        Latitude = waypointDto.Coordinates.Value.Latitude, 
+                        Longitude = waypointDto.Coordinates.Value.Longitude
                     } 
                 }
             };
         }
         throw new ArgumentException("Origin address or latitude and longitude are required.");
+    }
+
+    public WaypointDto Parse(string waypointAsString)
+    {
+        if (CoordinateRegex.IsMatch(waypointAsString))
+        {
+            var parts = waypointAsString.Split(',');
+            return new WaypointDto
+            {
+                Coordinates = new PolylinePoint(
+                    double.Parse(parts[0].Trim()),
+                    double.Parse(parts[1].Trim())
+                    )
+            };
+        }
+
+        return new WaypointDto
+        {
+            Address = waypointAsString.Trim()
+        };
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RouteService.DTOs;
 using RouteService.Services;
 
@@ -15,8 +14,8 @@ public class RoutesController : ControllerBase
         _googleMapsService = googleMapsService;
     }
     
-    [HttpPost]
-    public ActionResult<IList<RouteResponse>> Get([FromBody] RouteRequest request)
+    [HttpGet]
+    public ActionResult<IList<RouteResponse>> Get([FromQuery] RouteRequest request)
     {
         if (!ModelState.IsValid)
         {

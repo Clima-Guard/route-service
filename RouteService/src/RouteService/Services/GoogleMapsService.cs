@@ -1,9 +1,7 @@
 ﻿using Google.Api.Gax.Grpc;
 using Google.Maps.Routing.V2;
-using Google.Protobuf.Collections;
 using RouteService.DTOs;
 using RouteService.Utils;
-using Route = Google.Maps.Routing.V2.Route;
 
 namespace RouteService.Services;
 
@@ -24,8 +22,8 @@ public class GoogleMapsService: IGoogleMapsService
     {
         ComputeRoutesRequest request = new ComputeRoutesRequest
         {
-            Origin = _waypointFactory.Create(routeRequest.Origin),
-            Destination = _waypointFactory.Create(routeRequest.Destination),
+            Origin = _waypointFactory.Create(_waypointFactory.Parse(routeRequest.Origin)),
+            Destination = _waypointFactory.Create(_waypointFactory.Parse(routeRequest.Destination)),
             TravelMode = RouteTravelMode.Drive,
             PolylineQuality = PolylineQuality.HighQuality,
             ComputeAlternativeRoutes = true,
@@ -33,7 +31,7 @@ public class GoogleMapsService: IGoogleMapsService
         };
         if (routeRequest.IntermediateWaypoints != null)
         {
-            request.Intermediates.AddRange(routeRequest.IntermediateWaypoints.Select(x => _waypointFactory.Create(x)));
+            request.Intermediates.AddRange(routeRequest.IntermediateWaypoints.Select(waypoint => _waypointFactory.Create(_waypointFactory.Parse(waypoint))));
         }
         return request;
     }
