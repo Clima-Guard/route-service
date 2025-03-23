@@ -6,9 +6,14 @@ public class NotEmptyIfProvided: ValidationAttribute
 {
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if (value is string str && string.IsNullOrWhiteSpace(str))
+        if (value is null)
+            return new ValidationResult("List cannot be null");
+        if (value is List<string> list)
         {
-            return new ValidationResult("Field cannot be empty if provided");
+            if (list.Count != 0 && list.Any(string.IsNullOrWhiteSpace))
+            {
+                return new ValidationResult("List cannot contain empty or whitespace values if provided");
+            }
         }
         return ValidationResult.Success;
     }
