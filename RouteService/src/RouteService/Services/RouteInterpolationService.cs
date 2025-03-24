@@ -31,7 +31,6 @@ public class RouteInterpolationService: IRouteInterpolationService
                 routePolylinePoints, 
                 route.DistanceMeters, 
                 distanceAssumedToBeTraveledInFifteenMinutes);
-            listInterpolatedPointsAlongRoute.Add(routePolylinePoints.Last());
             listOfInterpolatedPointsAllRoutes.Add(listInterpolatedPointsAlongRoute);
         }
         return listOfInterpolatedPointsAllRoutes;
