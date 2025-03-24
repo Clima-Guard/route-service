@@ -36,7 +36,7 @@ public class InterpolationService: IInterpolationService
     private PolylinePoint InterpolatePointAtGivenDistanceFromStartSegment(PolylineSegment segment, double distanceAlongSegment)
     {
         InverseGeodesicResult segmentGeodesicResult = segment.GetInverseGeodesicResult();
-        var result = Geodesic.WGS84.Direct(segment.A.Latitude, segment.A.Longitude, segmentGeodesicResult.Azimuth1, distanceAlongSegment);
+        DirectGeodesicResult result = Geodesic.WGS84.Direct(segment.A.Latitude, segment.A.Longitude, segmentGeodesicResult.Azimuth1, distanceAlongSegment);
         return new PolylinePoint(result.Latitude, result.Longitude);
     }
 }

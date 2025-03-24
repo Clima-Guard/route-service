@@ -1,4 +1,5 @@
-﻿using RouteService.Exceptions;
+﻿using PolylinerNet;
+using RouteService.Exceptions;
 using RouteService.Services;
 using RouteService.Services.Factories;
 using RouteService.Services.Mappers;
@@ -32,14 +33,17 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers();
-        
         services.AddSingleton(Configuration);
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
         services.AddScoped<IRouteMapper, RouteMapper>();
         services.AddScoped<IWaypointFactory, WaypointFactory>();
+        services.AddScoped<Polyliner>();
         services.AddScoped<IGoogleMapsService, GoogleMapsService>();
+        services.AddScoped<IInterpolationService, InterpolationService>();
+        services.AddScoped<IRouteInterpolationService, RouteInterpolationService>();
+        
+        services.AddControllers();
         
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
