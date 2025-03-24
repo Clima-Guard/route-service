@@ -1,10 +1,8 @@
-﻿using Google.Protobuf.Collections;
-using RouteService.DTOs;
-using Route = Google.Maps.Routing.V2.Route;
+﻿using RouteService.DTOs;
 
 namespace RouteService.Services;
 
 public interface IGoogleMapsService
 {
-    IList<RouteResponse> GetRouteDetails(RouteRequest request);
+    Task<IList<RouteResponse>> GetRouteDetails(RouteRequest request);
 }

@@ -37,7 +37,7 @@ public class GoogleMapsService: IGoogleMapsService
         return request;
     }
     
-    public IList<RouteResponse> GetRouteDetails(RouteRequest request)
+    public async Task<IList<RouteResponse>> GetRouteDetails(RouteRequest request)
     {
         RoutesClient client = new RoutesClientBuilder
         {
@@ -46,7 +46,7 @@ public class GoogleMapsService: IGoogleMapsService
         CallSettings callSettings = CallSettings.FromHeader("X-Goog-FieldMask", "routes.distanceMeters,routes.duration,routes.polyline");
         
         ComputeRoutesRequest routesApiRequest = CreateRoutesApiRequest(request);
-        ComputeRoutesResponse response = client.ComputeRoutes(routesApiRequest, callSettings);
+        ComputeRoutesResponse response = await client.ComputeRoutesAsync(routesApiRequest, callSettings);
         
         return response.Routes.Select(route => _routeMapper.RouteToRouteResponse(route)).ToList();
     }
