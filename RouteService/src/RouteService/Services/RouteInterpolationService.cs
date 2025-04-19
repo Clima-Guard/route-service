@@ -26,11 +26,11 @@ public class RouteInterpolationService: IRouteInterpolationService
         foreach (RouteResponse route in routeDetails)
         {
             IList<PolylinePoint> routePolylinePoints = _polyliner.Decode(route.Polyline);
-            double distanceAssumedToBeTraveledInFifteenMinutes = (route.DistanceMeters * 900.0) / route.Duration ;
+            double distanceAssumedToBeTraveledInOneHour = (route.DistanceMeters * 3600.0) / route.Duration ;
             IList<PolylinePoint> listInterpolatedPointsAlongRoute = _interpolationService.GetInterpolatedPointsAlongRouteAtGivenDistance(
                 routePolylinePoints, 
                 route.DistanceMeters, 
-                distanceAssumedToBeTraveledInFifteenMinutes);
+                distanceAssumedToBeTraveledInOneHour);
             listOfInterpolatedPointsAllRoutes.Add(listInterpolatedPointsAlongRoute);
         }
         return listOfInterpolatedPointsAllRoutes;
