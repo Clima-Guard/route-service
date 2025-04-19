@@ -19,9 +19,9 @@ public class RouteInterpolationService: IRouteInterpolationService
         _interpolationService = interpolationService;
     }
     
-    public IList<IList<PolylinePoint>> GetInterpolatedPointsForRoutes(RouteRequest request)
+    public async Task<IList<IList<PolylinePoint>>> GetInterpolatedPointsForRoutes(RouteRequest request)
     {
-        IList<RouteResponse> routeDetails = _googleMapsService.GetRouteDetails(request);
+        IList<RouteResponse> routeDetails = await _googleMapsService.GetRouteDetails(request);
         IList<IList<PolylinePoint>> listOfInterpolatedPointsAllRoutes = new List<IList<PolylinePoint>>();
         foreach (RouteResponse route in routeDetails)
         {

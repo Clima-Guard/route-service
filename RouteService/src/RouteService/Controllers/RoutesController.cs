@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PolylinerNet;
 using RouteService.DTOs;
 using RouteService.Services;
@@ -19,23 +18,23 @@ public class RoutesController : ControllerBase
     }
     
     [HttpGet]
-    public ActionResult<IList<RouteResponse>> GetRoutes([FromQuery] RouteRequest request)
+    public async Task<ActionResult<IList<RouteResponse>>> GetRoutes([FromQuery] RouteRequest request)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
         
-        IList<RouteResponse> routes = _googleMapsService.GetRouteDetails(request);
+        IList<RouteResponse> routes = await _googleMapsService.GetRouteDetails(request);
         return Ok(routes);
     }
 
     [HttpGet("interpolation")]
-    public ActionResult<IList<IList<PolylinePoint>>> GetInterpolatedPoints([FromQuery] RouteRequest request)
+    public async Task<ActionResult<IList<IList<PolylinePoint>>>> GetInterpolatedPoints([FromQuery] RouteRequest request)
     {
         if(!ModelState.IsValid)
             return BadRequest(ModelState);
-        IList<IList<PolylinePoint>> interpolatedPointsForRoutes = _routeInterpolationService.GetInterpolatedPointsForRoutes(request);
+        IList<IList<PolylinePoint>> interpolatedPointsForRoutes = await _routeInterpolationService.GetInterpolatedPointsForRoutes(request);
         return Ok(interpolatedPointsForRoutes);
     }
 }
