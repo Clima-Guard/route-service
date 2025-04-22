@@ -22,17 +22,19 @@ public class RouteInterpolationService: IRouteInterpolationService
     public async Task<IList<IList<PolylinePoint>>> GetInterpolatedPointsForRoutes(RouteRequest request)
     {
         IList<RouteResponse> routeDetails = await _googleMapsService.GetRouteDetails(request);
-        IList<IList<PolylinePoint>> listOfInterpolatedPointsAllRoutes = new List<IList<PolylinePoint>>();
-        foreach (RouteResponse route in routeDetails)
+
+        IList<Task<IList<PolylinePoint>>> interpolationTasks = routeDetails.Select(route => Task.Run(() =>
         {
             IList<PolylinePoint> routePolylinePoints = _polyliner.Decode(route.Polyline);
-            double distanceAssumedToBeTraveledInOneHour = (route.DistanceMeters * 3600.0) / route.Duration ;
-            IList<PolylinePoint> listInterpolatedPointsAlongRoute = _interpolationService.GetInterpolatedPointsAlongRouteAtGivenDistance(
-                routePolylinePoints, 
-                route.DistanceMeters, 
-                distanceAssumedToBeTraveledInOneHour);
-            listOfInterpolatedPointsAllRoutes.Add(listInterpolatedPointsAlongRoute);
-        }
-        return listOfInterpolatedPointsAllRoutes;
+            double distanceAssumedToBeTraveledInOneHour = (route.DistanceMeters * 3600.0) / route.Duration;
+            return _interpolationService.GetInterpolatedPointsAlongRouteAtGivenDistance(
+                routePolylinePoints,
+                route.DistanceMeters,
+                distanceAssumedToBeTraveledInOneHour
+            );
+        })).ToList();
+
+        IList<PolylinePoint>[] results = await Task.WhenAll(interpolationTasks);
+        return results.ToList();
     }
 }
