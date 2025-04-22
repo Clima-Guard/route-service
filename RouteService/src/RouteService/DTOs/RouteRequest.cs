@@ -14,6 +14,7 @@ public class RouteRequest
     public string Destination { get; set; }
     [FromQuery(Name = "waypoints")]
     [NotEmptyIfProvided]
+    [MaxNumberElements(10)]
     public List<string>? IntermediateWaypoints { get; set; }
     
     public RouteRequest() 
