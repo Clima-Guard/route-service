@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace RouteService.Exceptions;
 
-public class GlobalExceptionHandler: IExceptionHandler
+public class GlobalExceptionHandler : IExceptionHandler
 {
     private readonly ILogger<GlobalExceptionHandler> _logger;
 
@@ -17,21 +17,37 @@ public class GlobalExceptionHandler: IExceptionHandler
         Exception exception,
         CancellationToken cancellationToken)
     {
-        _logger.LogError(
-            exception, "Exception occurred at {Time}: {Message}", DateTime.UtcNow, exception.Message);
+        _logger.LogError(exception, "Exception occurred at {Time}: {Message}", DateTime.UtcNow, exception.Message);
 
-        var problemDetails = new ProblemDetails
+        int statusCode = StatusCodes.Status500InternalServerError;
+        string title = "Server error";
+        string message = "An unexpected error occurred. Please try again later.";
+
+        if (exception is ArgumentException)
         {
-            Status = StatusCodes.Status500InternalServerError,
-            Title = "Server error",
-            Instance = httpContext.Request.Path,
-            
+            statusCode = StatusCodes.Status400BadRequest;
+            title = "Invalid input";
+            message = exception.Message;
+        }
+        else if (exception is TimeoutException)
+        {
+            statusCode = StatusCodes.Status504GatewayTimeout;
+            title = "Timeout";
+            message = "The request took too long to complete.";
+        }
+
+        ProblemDetails problemDetails = new ProblemDetails
+        {
+            Status = statusCode,
+            Title = title,
+            Detail = message,
+            Instance = httpContext.Request.Path
         };
 
-        httpContext.Response.StatusCode = problemDetails.Status.Value;
+        httpContext.Response.StatusCode = statusCode;
+        httpContext.Response.ContentType = "application/json";
 
-        await httpContext.Response
-            .WriteAsJsonAsync(problemDetails, cancellationToken);
+        await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
 
         return true;
     }
